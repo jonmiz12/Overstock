@@ -137,4 +137,4 @@ class CommonCart(BasePage):
                 item_failed_assertions.append(f"expected_vendor: {expected_vendor}, actual_vendor {actual_vendor}\nfor item: {item},\n in cart: {cart}\n")
             for item_error in item_failed_assertions:
                 self.add_failed_assertion(item_error)
-                self.get_screenshot()
+                self.get_screenshot_in_test_report()

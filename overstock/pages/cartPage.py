@@ -40,7 +40,7 @@ class CartPage(Header, CommonCart):
         minus_usd = float(minus_dollar.replace(" USD", ""))
         actual_total_price = int(minus_usd)
         if expected_total_price != actual_total_price:
-            self.get_screenshot()
+            self.get_screenshot_in_test_report()
             self.add_failed_assertion(f"actual total price: {actual_total_price}. expected total price: {expected_total_price}\nfor cart: {cart}")
 
     def wait_for_cart_page(self):
@@ -48,16 +48,15 @@ class CartPage(Header, CommonCart):
         actual_title = self.cart_page_title.inner_text()
         expected_title = "Your cart"
         if self.cart_page_title.inner_text() == expected_title:
-            self.get_screenshot()
+            self.get_screenshot_in_test_report()
             self.add_failed_assertion(f"actual title: {actual_title}. expected title: {expected_title}")
 
     def remove_item_cart_page(self, item: dict, cart: List[dict]):
         self.remove_item(item, cart, self.item_els, self.item_name, self.remove_button)
 
-    def validate_maximum_quantities_cart_page(self, cart: List[dict]) -> List[dict]:
-        cart = self.validate_maximum_quantities(self.item_els, self.item_quantity, self.decrease_quantity,
-                                                self.increase_quantity, cart)
-        return cart
+    # def validate_maximum_quantities_cart_page(self, cart: List[dict]) -> List[dict]:
+    #     cart = self.validate_maximum_quantities(self.item_els, self.item_quantity, self.decrease_quantity, self.increase_quantity, cart)
+    #     return cart
 
     def change_cart_quantities_cart_page(self, cart: List[dict], amounts: [int]) -> List[dict]:
         cart = self.change_cart_quantities(cart, amounts, self.item_els, self.item_name, self.increase_quantity,

@@ -146,17 +146,18 @@ class BasePage:
         expected_item_count = len(cart) - 1
 
         if expected_item_count != actual_item_count:
-            self.get_screenshot()
+            self.get_screenshot_in_test_report()
             self.add_failed_assertion(f"len(cart) - 1: {len(cart) - 1}, actual_item_count: {actual_item_count}")
 
         match = False
         for item_el in item_els.all():
             actual_item_name = item_el.locator(item_name).inner_text()
-            if actual_item_name == removed_item["name"]: continue
-            match = True
+            if actual_item_name == removed_item["name"]:
+                match = True
+                break
 
-        if not match:
-            self.get_screenshot()
+        if match:
+            self.get_screenshot_in_test_report()
             assert False, f"expected to remove item: {removed_item['name']}.\nfrom cart: {cart}"
 
         cart.remove(removed_item)
@@ -172,7 +173,7 @@ class BasePage:
         result_amount = initial_amount + amount
         actual_amount = self.return_actual_amount(item_el, item_quantity)
         if result_amount != actual_amount:
-            self.get_screenshot()
+            self.get_screenshot_in_test_report()
             self.add_failed_assertion(
                 f"result_amount: {result_amount}, actual_amount: {actual_amount} for item '{item}'")
         item["quantity"] = result_amount
@@ -210,17 +211,18 @@ class BasePage:
         else:
             return round(number)
 
-    def get_screenshot(self):
-        # dire = "C:\\Users\\jonmi\\PycharmProjects\\playwrightPy\\tempPic"
-        # self.page.screenshot(path=f'{dire}.png')
-        # assert False
-        current_datetime = Utils.get_current_datetime()
-        screenshot_path = Utils.TEST_REPORT_DIR + "\\" + Utils.START_TIME + "\\" + current_datetime
-        # print(f"THIS IS WHERE THE SCREENSHOT HAPPENS - {screenshot_path}")
-        # print("")
-        # print("")
-        # print("")
-        self.page.screenshot(path=f"{screenshot_path}.png", full_page=True)
+    def get_screenshot_in_test_report(self=None, page: Page=None, file_name=None):
+        # Check if method is called with 'self' or directly with 'page'
+        if self:
+            page = self.page  # if called with 'self', use self.page
+        elif page is None:
+            raise ValueError("A valid 'page' object must be provided when calling this method without 'self'.")
+
+        if file_name is None:
+            file_name = Utils.get_current_datetime()
+        screenshot_path = Utils.TEST_REPORT_DIR + "\\" + Utils.START_TIME + "\\" + file_name
+        page.screenshot(path=f"{screenshot_path}.png", full_page=True)
+        print(Fore.GREEN + f"\nSaved screenshot at: {screenshot_path}" + Style.RESET_ALL)
 
     @classmethod
     def add_failed_assertion(cls, error):
@@ -260,6 +262,10 @@ class BasePage:
                 log_file.write("No test defect errors.\n")
 
         print(Fore.GREEN + f"\nLog file created at: {log_file_path}" + Style.RESET_ALL)
+
+    @classmethod
+    def create_test_report(cls, request, page):
+        cls.create_logfile(request)
 
     def assert_responses(self, responses: [], valid_responses: []):
         failed_responses = []

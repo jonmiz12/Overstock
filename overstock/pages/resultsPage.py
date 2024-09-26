@@ -44,7 +44,11 @@ class ResultsPage(Header):
         return formatted_number
 
     def assert_title(self, query: str):
-        title = self.search_title.inner_text(timeout=3000)
-        if query != title:
-            self.get_screenshot()
+        title = None
+        try:
+            title = self.search_title.inner_text(timeout=3000)
+        except Exception:
+            pass
+        if title != query or title is None:
+            self.get_screenshot_in_test_report()
             self.add_failed_assertion(f"query: {query}, title: {title}")

@@ -18,7 +18,7 @@ class ItemPage(Header):
         self.options_elements = page.locator(".custom-select")
         self.options_options = page.locator('ul>li')
         self.item_name = page.locator(".product-title")
-        self.item_price = page.locator(".product-info__price .price__current strong")
+        self.item_price = page.locator(".product-info__price .price__current strong:not([class='price__current'])")
         self.item_quantity = page.locator("[id^='quantity-template']")
         self.increase_quantity = page.locator(".product-info__sticky [name='plus']")
         self.decrease_quantity = page.locator(".product-info__sticky [name='minus']")
@@ -63,10 +63,10 @@ class ItemPage(Header):
             if cart_vendor != actual_vendor:
                 failed_assertions.append(f"cart vendor:{cart_vendor} actual vendor: {actual_vendor}")
         else:
-            self.get_screenshot()
+            self.get_screenshot_in_test_report()
             self.add_failed_assertion(f"No match was found for the item name: {item['name']}")
         for failed_assertion in failed_assertions:
-            self.get_screenshot()
+            self.get_screenshot_in_test_report()
             self.add_failed_assertion(failed_assertion)
 
     def change_amount(self, amount: int, cart: List[dict]) -> List[dict]:
