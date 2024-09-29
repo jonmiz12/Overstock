@@ -1,6 +1,6 @@
 # Overstock Automation Project
 
-This project automates tests for [overstock.com](https://www.overstock.com). It covers various flows for adding and removing products, validating key sections, and checking response integrity on the site.
+This project automates tests for [overstock.com](https://www.overstock.com). It covers various flows for adding and removing products, validating key sections, and checking response integrity on the site..
 ## Recommended prerequisites
   - **Python version - 3.10.11**
   - **Playwright version - 9.6.6**
