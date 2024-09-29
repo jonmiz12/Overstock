@@ -8,14 +8,14 @@ This project automates tests for [overstock.com](https://www.overstock.com). It 
 ## Known issues
 
 ### Unknown maximum quantities
-- **Different items have different maximum quantities allowed. The maximum quantities are un-known, only after trying to exceed this unknown amount is when an error is displayed**
+- **Different items have different maximum quantities allowed. The maximum quantities are un-known, only after trying to exceed this unknown amount, an error is displayed.**
 
 ### Cart prices decimal anomalies
-- **Scaling the cart's total amount over around 10,000$ can lead to price validation errors due to the site calculating floating numbers with longer decimal length than is actually displayed**
-- **Therefore, the project validates prices calculations without floating points by default**
+- **Scaling the cart's total amount over around 10,000$ can lead to price validation errors due to the site calculating floating numbers with longer decimal length than is actually displayed.**
+- **Therefore, the project validates prices calculations without floating points by default.**
 
 ## Reports
-The project generates detailed logs and screenshots for each test in the `/reports` folder. Each test run automatically creates a log file to record any errors and includes screenshots of failed steps.
+- **The project generates detailed logs and screenshots for each test in the `/reports` folder. Each test run automatically creates a log file to record any errors and includes screenshots of failed steps.**
 
 ## Project Structure
 
