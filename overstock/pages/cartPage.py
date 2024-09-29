@@ -1,3 +1,4 @@
+import inspect
 from typing import List
 
 from playwright.sync_api import Page
@@ -25,7 +26,6 @@ class CartPage(Header, CommonCart):
         self.item_vendor = page.locator(".cart-item__details .text-theme-light")
 
     def validate_items_in_cart(self, cart: List[dict]):
-        # time.sleep(1)
         self.validate_cart(cart, self.item_els, self.item_name, self.item_vendor, self.item_quantity, self.item_price,
                            self.item_total_price)
 
@@ -41,7 +41,7 @@ class CartPage(Header, CommonCart):
         actual_total_price = int(minus_usd)
         if expected_total_price != actual_total_price:
             self.get_screenshot_in_test_report()
-            self.add_failed_assertion(f"actual total price: {actual_total_price}. expected total price: {expected_total_price}\nfor cart: {cart}")
+            self.add_failed_assertion(f"actual total price: {actual_total_price}. expected total price: {expected_total_price}\nfor cart: {cart}", inspect.currentframe().f_code.co_name)
 
     def wait_for_cart_page(self):
         self.cart_page_title.wait_for()
@@ -49,16 +49,12 @@ class CartPage(Header, CommonCart):
         expected_title = "Your cart"
         if self.cart_page_title.inner_text() == expected_title:
             self.get_screenshot_in_test_report()
-            self.add_failed_assertion(f"actual title: {actual_title}. expected title: {expected_title}")
+            self.add_failed_assertion(f"actual title: {actual_title}. expected title: {expected_title}", inspect.currentframe().f_code.co_name)
 
     def remove_item_cart_page(self, item: dict, cart: List[dict]):
         self.remove_item(item, cart, self.item_els, self.item_name, self.remove_button)
 
-    # def validate_maximum_quantities_cart_page(self, cart: List[dict]) -> List[dict]:
-    #     cart = self.validate_maximum_quantities(self.item_els, self.item_quantity, self.decrease_quantity, self.increase_quantity, cart)
-    #     return cart
-
     def change_cart_quantities_cart_page(self, cart: List[dict], amounts: [int]) -> List[dict]:
-        cart = self.change_cart_quantities(cart, amounts, self.item_els, self.item_name, self.increase_quantity,
+        cart = self.change_cart_quantities(self, cart, amounts, self.item_els, self.item_name, self.increase_quantity,
                                            self.decrease_quantity, self.item_quantity, self.item_error, self.cart_btn)
         return cart

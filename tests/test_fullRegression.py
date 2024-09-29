@@ -11,10 +11,8 @@ from overstock.pages.resultsPage import ResultsPage
 
 def test_full_regression(page: Page):
     cart: List[Dict] = []
-    # items_quantities_add = [1, 1, 20]
-    # items_quantities_change = [0, 0, 10]
     items_quantities_add = [3, 4, 2]
-    items_quantities_change = [2, 4, 6]
+    items_quantities_change = [2, -1, 6]
     remove_indexes = [0, 0]
     page.goto("https://www.overstock.com/")
     # home page

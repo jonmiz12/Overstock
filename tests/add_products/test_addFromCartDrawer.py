@@ -10,8 +10,8 @@ from overstock.pages.resultsPage import ResultsPage
 
 def test_add_from_cart_drawer(page: Page):
     cart: List[Dict] = []
-    items_quantities_add = [4, 1]
-    items_quantities_change = [2, 3]
+    items_quantities_add = [4, 1, 4]
+    items_quantities_change = [2, 3, 2]
     page.goto("https://www.overstock.com/")
 
     # home page

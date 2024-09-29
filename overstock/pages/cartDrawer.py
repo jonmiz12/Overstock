@@ -24,17 +24,10 @@ class CartDrawer(Header, CommonCart):
         self.remove_button = page.locator(".cart-item__remove")
         self.item_error = page.locator("[id^='line-item-error']")
         self.item_vendor = page.locator(".cart-item__details .text-theme-light")
+        self.checkout_btn = page.locator("button[name='checkout']")
 
-    @staticmethod
-    def wait_for_drawer():
-        # while True:
-        #     try:
-        #         text = self.item_els.inner_text()
-        #         if text != "":
-        #             break
-        #     except:
-        #         continue
-        time.sleep(4)
+    def wait_for_drawer(self):
+        self.checkout_btn.wait_for()
 
     def click_cart_close_btn(self):
         self.cart_drawer_clos_btn.click()
@@ -47,7 +40,7 @@ class CartDrawer(Header, CommonCart):
         self.cart_page_btn.click()
 
     def change_cart_quantities_cart_drawer(self, cart: List[dict], amounts: [int]) -> List[dict]:
-        cart = self.change_cart_quantities(cart, amounts, self.item_els, self.item_name, self.increase_quantity,
+        cart = self.change_cart_quantities(self, cart, amounts, self.item_els, self.item_name, self.increase_quantity,
                                            self.decrease_quantity, self.item_quantity, self.item_error, self.cart_btn)
         return cart
 

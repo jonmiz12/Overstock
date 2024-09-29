@@ -11,8 +11,8 @@ from overstock.pages.resultsPage import ResultsPage
 
 def test_add_from_cart_page(page: Page):
     cart: List[Dict] = []
-    items_quantities_add = [1, 1]
-    items_quantities_change = [2, 3]
+    items_quantities_add = [3, 1, 3]
+    items_quantities_change = [2, 3, 2]
     remove_indexes = [1, 1]
     page.goto("https://www.overstock.com/")
 

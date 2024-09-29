@@ -1,3 +1,4 @@
+import inspect
 import string
 from typing import Dict
 
@@ -51,4 +52,4 @@ class ResultsPage(Header):
             pass
         if title != query or title is None:
             self.get_screenshot_in_test_report()
-            self.add_failed_assertion(f"query: {query}, title: {title}")
+            self.add_failed_assertion(f"query: {query}, title: {title}", inspect.currentframe().f_code.co_name)

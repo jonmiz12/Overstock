@@ -11,8 +11,8 @@ from overstock.pages.resultsPage import ResultsPage
 
 def test_remove_from_cart_page_minus(page: Page):
     cart: List[Dict] = []
-    items_quantities_add = [4, 5]
-    items_quantities_change = [2, 3]
+    items_quantities_add = [4, 5, 4]
+    items_quantities_change = [2, 3, 2]
     remove_indexes = [1, 1]
     page.goto("https://www.overstock.com/")
 

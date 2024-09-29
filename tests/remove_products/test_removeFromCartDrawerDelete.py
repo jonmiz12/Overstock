@@ -11,8 +11,8 @@ from overstock.pages.resultsPage import ResultsPage
 
 def test_remove_from_cart_drawer_delete(page: Page):
     cart: List[Dict] = []
-    items_quantities_add = [4, 3]
-    remove_indexes = [0, 0]
+    items_quantities_add = [4, 3, 4]
+    remove_indexes = [0, 0, 0]
     page.goto("https://www.overstock.com/")
 
     # home page

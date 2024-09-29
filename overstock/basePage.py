@@ -1,3 +1,4 @@
+import inspect
 import logging
 import math
 import time
@@ -15,16 +16,14 @@ DISCOUNT = 1
 DISCOUNT_THRESHOLD = 1000
 
 
-class CustomError(Exception):
-    pass
-
-
 class BasePage:
     failed_assertions = []
 
     def __init__(self, page: Page):
+        # Initializes the BasePage class with a Playwright page object.
         self.page = page
 
+    # Creates an item with the given data and adds it to the cart. Applies a discount before inserting the item at the beginning of the cart.
     def create_item(self, cart: List, item_data: dict, total_price: int = 0, quantity: int = 0,
                     properties: Dict = None, max_quantity: float = None) -> List:
         item = {
@@ -42,6 +41,7 @@ class BasePage:
         cart.insert(0, item)
         return cart
 
+    # Updates the quantity of a specific item in the cart by matching its name.
     @staticmethod
     def update_quantity(cart: [], quantity: int, item_name: str):
         for item in cart:
@@ -49,6 +49,7 @@ class BasePage:
                 item['quantity'] = quantity
                 break
 
+    # Removes commas from text and extracts part of the text based on the given indicator. Optionally, the indicator can be removed from the result.
     @staticmethod
     def extract_clean_text(text: str, indicator: str, remove_indicator: bool = False) -> str:
         text = text.replace(",", "")
@@ -61,6 +62,8 @@ class BasePage:
         else:
             return ""
 
+    # Checks the total price of the cart, determines if a discount is applicable, and applies the discount to all items in the cart.
+    # The site changes the discount rules from time to time so the commented out rule can be added at any time.
     def check_for_discount_and_update_cart(self, cart: List[dict]) -> List[dict]:
         global DISCOUNT
         total = 0
@@ -81,6 +84,7 @@ class BasePage:
                 item = self.apply_discount_to_item(item)
         return cart
 
+    # Applies the global discount to an item's price and updates its 'raw_price' and 'price' fields.
     @staticmethod
     def apply_discount_to_item(item: [dict]):
         global DISCOUNT
@@ -89,6 +93,7 @@ class BasePage:
         item['raw_price'] = item['original_price'] * DISCOUNT
         return item
 
+    # Returns the current quantities of all items based on their locator and the item_quantity element.
     @staticmethod
     def return_current_quantities(item_els: Locator, item_quantity: Locator) -> [int]:
         quantities = []
@@ -97,88 +102,25 @@ class BasePage:
             quantities.append(quantity)
         return quantities
 
+    # Returns 1 if the amount is positive, otherwise returns -1.
     @staticmethod
     def sign(amount: int) -> int:
         return 1 if amount > 0 else -1
 
-    def create_unmatched_quantities(self, before_quantities: [], item_els: Locator, item_quantity: Locator, amount: int,
-                                    item_el_index=None) -> []:
-        quantities_len = len(before_quantities)
-        after_quantities = self.return_current_quantities(item_els, item_quantity)
-        unmatched_quantities = []
-        pos_or_neg = self.sign(amount)
-        for index in range(quantities_len - 1, -1, -1):
-            if before_quantities[index] != after_quantities[index]:
-                unmatched = [index, after_quantities[index]]
-                temp = before_quantities[index] + pos_or_neg == unmatched[1]
-                if unmatched[0] == item_el_index and temp:
-                    continue
-                unmatched_quantities.append(unmatched)
-        return unmatched_quantities
-
+    # Adjusts the cart to match the current quantities of items based on locators.
     def adjust_cart_to_quantities(self, cart: List[dict], item_els: Locator, item_quantity: Locator) -> List[dict]:
         quantities = self.return_current_quantities(item_els, item_quantity)
         for iterator in range(len(cart)):
             cart[iterator]["quantity"] = quantities[len(quantities) - 2 - iterator]
         return cart
 
-    @staticmethod
-    def raise_max_quantity_error():
-        try:
-            raise CustomError(f"Max quantity reached! Bypassing test data with default max quantities")
-        except CustomError as e:
-            logging.error(f"Error occurred: {e}")
-
-    def remove_item(self, item: dict, cart: List[dict], item_els: Locator, item_name: Locator,
-                    remove_button: Locator) -> List[dict]:
-        for item_el in item_els.all():
-            if item_el.locator(item_name).inner_text() != item["name"]:
-                continue
-            item_el.locator(remove_button).click()
-            time.sleep(3)
-            break
-        cart = self.validate_item_is_removed(item, cart, item_els, item_name)
-        return cart
-
-    def validate_item_is_removed(self, removed_item: [dict], cart: List[dict], item_els: Locator, item_name: Locator) -> \
-            List[dict]:
-        actual_item_count = item_els.count()
-        expected_item_count = len(cart) - 1
-
-        if expected_item_count != actual_item_count:
-            self.get_screenshot_in_test_report()
-            self.add_failed_assertion(f"len(cart) - 1: {len(cart) - 1}, actual_item_count: {actual_item_count}")
-
-        match = False
-        for item_el in item_els.all():
-            actual_item_name = item_el.locator(item_name).inner_text()
-            if actual_item_name == removed_item["name"]:
-                match = True
-                break
-
-        if match:
-            self.get_screenshot_in_test_report()
-            assert False, f"expected to remove item: {removed_item['name']}.\nfrom cart: {cart}"
-
-        cart.remove(removed_item)
-        return cart
-
+    # Returns the current amount (quantity) of a specific item.
     @staticmethod
     def return_actual_amount(item_el: Locator, item_quantity: Locator) -> int:
         amount = int(item_el.locator(item_quantity).get_attribute("value"))
         return amount
 
-    def assert_quantity(self, initial_amount: int, amount: int, item_el: Locator, item_quantity: Locator,
-                        item: dict) -> dict:
-        result_amount = initial_amount + amount
-        actual_amount = self.return_actual_amount(item_el, item_quantity)
-        if result_amount != actual_amount:
-            self.get_screenshot_in_test_report()
-            self.add_failed_assertion(
-                f"result_amount: {result_amount}, actual_amount: {actual_amount} for item '{item}'")
-        item["quantity"] = result_amount
-        return item
-
+    # Calculates the amount to be adjusted based on the maximum quantity allowed for an item.
     @staticmethod
     def calculate_amount_by_max_quantity(actual_amount: int, item: dict, amount: int) -> int:
         expected_final_amount = actual_amount + amount
@@ -190,6 +132,7 @@ class BasePage:
         else:
             return amount
 
+    # Checks if the "max quantity" error message is displayed for any item in the cart.
     @staticmethod
     def is_max_error_displayed(item_error: Locator) -> bool:
         is_error_displayed = False
@@ -199,11 +142,13 @@ class BasePage:
                 break
         return is_error_displayed
 
+    # Rounds the given number to the nearest half (0.5 increments).
     @staticmethod
     def custom_round(number: float) -> float:
         rounded = math.ceil(number * 2) / 2
         return round(rounded, 2)
 
+    # Rounds down the number if it ends in 0.5, otherwise rounds it normally.
     @staticmethod
     def round_down_on_half(number: float) -> float:
         if number % 1 == 0.5:
@@ -211,70 +156,65 @@ class BasePage:
         else:
             return round(number)
 
-    def get_screenshot_in_test_report(self=None, page: Page=None, file_name=None):
-        # Check if method is called with 'self' or directly with 'page'
+    # Takes a full-page screenshot and saves it to a specified path or the default test report folder, either using
+    # 'self.page' or the provided 'page'.
+    def get_screenshot_in_test_report(self=None, page: Page = None, file_name=None):
         if self:
-            page = self.page  # if called with 'self', use self.page
+            page = self.page
         elif page is None:
             raise ValueError("A valid 'page' object must be provided when calling this method without 'self'.")
-
         if file_name is None:
             file_name = Utils.get_current_datetime()
         screenshot_path = Utils.TEST_REPORT_DIR + "\\" + Utils.START_TIME + "\\" + file_name
         page.screenshot(path=f"{screenshot_path}.png", full_page=True)
         print(Fore.GREEN + f"\nSaved screenshot at: {screenshot_path}" + Style.RESET_ALL)
 
+    # Adds an error message with the name of the method from an inspect object and timestamp to the 'failed_assertions' list.
     @classmethod
-    def add_failed_assertion(cls, error):
+    def add_failed_assertion(cls, error, method_name):
         current_datetime = Utils.get_current_datetime()
         if isinstance(cls.failed_assertions, list):
-            cls.failed_assertions.append(error + " " + current_datetime)
+            cls.failed_assertions.append("Method name: " + method_name + "\n" + error + "\n" + current_datetime)
         else:
             print("Error: self.errors is not a list.")
 
+    # Prints all failed assertions in red text. If any failed assertions exist, it will raise an assertion error.
     @classmethod
     def print_failed_assertions(cls) -> []:
         for failed_assertion in cls.failed_assertions:
             print(Fore.RED + f"{failed_assertion}" + Style.RESET_ALL + "\n")
         assert len(cls.failed_assertions) == 0
 
+    # Creates a log file for the test, recording any failed assertions and test defects. The log file is saved in a directory
+    # based on the current test's start time and name. If there are no product errors or test defect errors, the log will indicate that.
     @classmethod
     def create_logfile(cls, request):
         start_time = Utils.START_TIME
         path = Utils.TEST_REPORT_DIR
         test_name = request.node.originalname
         log_file_path = os.path.join(path, start_time, test_name + ".log")
-
         os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
-
         with open(log_file_path, 'w', encoding='utf-8') as log_file:
             if cls.failed_assertions:
                 log_file.write(f"Product errors:\n")
                 for failed_assertion in cls.failed_assertions:
-                    log_file.write(f"{failed_assertion}\n")
+                    log_file.write(f"\n{failed_assertion}\n")
             else:
-                log_file.write("No product errors.\n")
-            # Checking for non-assertion errors
-            rep_call = getattr(request.node, "rep_call", None)  # Test execution result
+                log_file.write("\nNo product errors.\n")
+            rep_call = getattr(request.node, "rep_call", None)
             if rep_call and rep_call.failed:
                 log_file.write(f"\nTest defect error:\n{rep_call.longreprtext}\n")
             else:
-                log_file.write("No test defect errors.\n")
-
+                log_file.write("\nNo test defect errors.\n")
         print(Fore.GREEN + f"\nLog file created at: {log_file_path}" + Style.RESET_ALL)
 
-    @classmethod
-    def create_test_report(cls, request, page):
-        cls.create_logfile(request)
-
+    # Compares a list of responses against valid responses, and adds any invalid response statuses to the failed assertions list.
     def assert_responses(self, responses: [], valid_responses: []):
         failed_responses = []
         for response in responses:
             status: str = response.status
             if not valid_responses.__contains__(status):
                 failed_responses.append(response)
-
         for failed_response in failed_responses:
-            self.add_failed_assertion(f"Found invalid response status: {failed_response}")
-        # Asserts no failed responses found
-        # assert len(failed_responses) == 0, f"failed responses: {failed_responses}"
+            self.add_failed_assertion(f"Found invalid response status: {failed_response}", inspect.currentframe().f_code.co_name)
+

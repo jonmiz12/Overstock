@@ -1,3 +1,5 @@
+import inspect
+
 from overstock.pages.header import Header
 from playwright.sync_api import Page
 
@@ -18,5 +20,5 @@ class HomePage(Header):
         actual_sections_count = self.sections.count()
         if actual_sections_count != expected_sections_count:
             error = f"Expected sections count: {expected_sections_count}. actual sections count: {actual_sections_count}"
-            self.add_failed_assertion(error)
+            self.add_failed_assertion(error, inspect.currentframe().f_code.co_name)
             self.get_screenshot_in_test_report()
