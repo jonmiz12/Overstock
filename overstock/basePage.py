@@ -1,13 +1,10 @@
 import inspect
-import logging
 import math
-import time
 import os
 from typing import List, Dict
 
 from colorama import Fore, Style
 
-from utils import utils
 from utils.utils import Utils
 
 from playwright.sync_api import Page, Locator

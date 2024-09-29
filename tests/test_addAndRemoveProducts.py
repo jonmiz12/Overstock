@@ -9,7 +9,7 @@ from overstock.pages.homePage import HomePage
 from overstock.pages.resultsPage import ResultsPage
 
 
-def test_full_regression(page: Page):
+def test_add_and_remove_products(page: Page):
     cart: List[Dict] = []
     items_quantities_add = [3, 4, 2]
     items_quantities_change = [2, -1, 6]

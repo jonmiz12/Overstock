@@ -1,4 +1,3 @@
-import time
 from typing import List
 
 from playwright.sync_api import Page
