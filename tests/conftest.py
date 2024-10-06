@@ -10,6 +10,7 @@ def before_and_after_each(request, page):
     Utils.create_test_folder_and_start_time(request)
     yield
     BasePage.create_logfile(request)
+    BasePage.attach_test_artifacts()
     BasePage.print_failed_assertions()
 
 

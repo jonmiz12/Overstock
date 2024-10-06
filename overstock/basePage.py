@@ -1,8 +1,10 @@
 import inspect
 import math
 import os
+from pathlib import Path
 from typing import List, Dict
 
+import allure
 from colorama import Fore, Style
 
 from utils.utils import Utils
@@ -122,7 +124,7 @@ class BasePage:
     def calculate_amount_by_max_quantity(actual_amount: int, item: dict, amount: int) -> int:
         expected_final_amount = actual_amount + amount
         item_max_quantity = item["max_quantity"] or 0
-        if expected_final_amount > item_max_quantity and item_max_quantity is not 0:
+        if expected_final_amount > item_max_quantity != 0:
             return item_max_quantity - actual_amount
         elif expected_final_amount < 0:
             return actual_amount * -1
@@ -200,12 +202,13 @@ class BasePage:
                 log_file.write("\nNo product errors.\n")
             rep_call = getattr(request.node, "rep_call", None)
             if rep_call and rep_call.failed:
-                log_file.write(f"\nTest defect error:\n{rep_call.longreprtext}\n")
+                log_file.write(f"\nTest defect error: \n{rep_call.longreprtext}\n")
             else:
                 log_file.write("\nNo test defect errors.\n")
         print(Fore.GREEN + f"\nLog file created at: {log_file_path}" + Style.RESET_ALL)
 
-    # Compares a list of responses against valid responses, and adds any invalid response statuses to the failed assertions list.
+    # Compares a list of responses against valid responses, and adds any invalid response statuses to the failed
+    # assertions list.
     def assert_responses(self, responses: [], valid_responses: []):
         failed_responses = []
         for response in responses:
@@ -215,3 +218,17 @@ class BasePage:
         for failed_response in failed_responses:
             self.add_failed_assertion(f"Found invalid response status: {failed_response}", inspect.currentframe().f_code.co_name)
 
+    # Attach the screenshots and logs for a given test to the Allure report.
+    @staticmethod
+    def attach_test_artifacts():
+        folder = Path(f"{Utils.TEST_REPORT_DIR}/{Utils.START_TIME}")
+
+        # Attach screenshots
+        for screenshot_file in folder.glob("*.png"):
+            with open(screenshot_file, "rb") as screenshot:
+                allure.attach(screenshot.read(), name=screenshot_file.name, attachment_type=allure.attachment_type.PNG)
+
+        # Attach logs
+        for log_file in folder.glob("*.log"):
+            with open(log_file, "r") as log:
+                allure.attach(log.read(), name=log_file.name, attachment_type=allure.attachment_type.TEXT)
