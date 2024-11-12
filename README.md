@@ -3,9 +3,8 @@
 This project automates tests for [overstock.com](https://www.overstock.com). It covers various flows for adding and removing products, validating key sections, and checking response integrity on the site.
 
 ## Recommended prerequisites
-
-- **Python version - 3.10.11**
-- **Playwright version - 9.6.6**
+### requirements
+- **`requirements.txt` is a file that contains the versions of the tools and packages required in this project.**
 
 ## Known issues
 
@@ -69,9 +68,6 @@ This project automates tests for [overstock.com](https://www.overstock.com). It 
 - **contains a json file for each test.**
 - **Each file must contain at least one object with the relevant keys and values for the test to execute.**
 - **The test will execute the number times as the number of objects in its json file.**
-
-### requirements
-- **`requirements.txt` is a file that contains the versions of the tools and packages required in this project**
 
 ### pytest.ini
 - **`pytest.ini` contains the pytest configuration such as reports conffigurations, browser, resolution, etc.**
