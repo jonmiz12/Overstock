@@ -1,0 +1,10 @@
+{
+    "data": [{
+        "url": "https://www.overstock.com",
+        "query": "bracelet",
+        "items_quantities_add": [3, 4, 2],
+        "items_quantities_change": [2, -1, 6],
+        "remove_indexes_cart_drawer": [0],
+        "remove_indexes_cart_page": [0]
+    }]
+}

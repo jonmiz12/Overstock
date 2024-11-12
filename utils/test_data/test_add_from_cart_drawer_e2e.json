@@ -1,0 +1,10 @@
+{
+    "data": [
+    {
+        "url": "https://www.overstock.com",
+        "query": "watch",
+        "items_quantities_add": [4, 1, 3],
+        "items_quantities_change": [2, 3, 2]
+    }
+    ]
+}

@@ -1,9 +1,6 @@
-from playwright.sync_api import Page
+from overstock.base_page import BasePage
 
-from overstock.basePage import BasePage
-
-
-def test_responses(page: Page):
+def test_responses(page,data):
     # pre-decided 'valid' response statuses
     # 200 successful request
     # 201 successful request, resource created

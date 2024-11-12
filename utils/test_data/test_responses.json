@@ -1,0 +1,6 @@
+{
+    "data": [{
+        "url": "https://www.overstock.com/",
+        "valid_responses": [200, 201, 204]
+    }]
+}

@@ -1,0 +1,12 @@
+{
+        "add_to_cart_button": ".product-info__block .product-info__add-button [type='submit']",
+        "options_elements": ".custom-select",
+        "options_options": "ul>li",
+        "item_name": ".product-title",
+        "item_price": ".product-info__price .price__current strong:not([class='price__current'])",
+        "item_quantity": "[id^='quantity-template']",
+        "increase_quantity": ".product-info__sticky [name='plus']",
+        "decrease_quantity": ".product-info__sticky [name='minus']",
+        "item_vendor": ".product-vendor",
+        "item_error": ".product-info__block .alert"
+}

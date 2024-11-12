@@ -1,0 +1,16 @@
+{
+        "drawer_el": "cart-drawer.drawer",
+        "item_els": ".cart-items tbody>tr",
+        "item_name": ".cart-item__title",
+        "item_price": ".cart-item__info .price__current",
+        "item_total_price": ".cart-item__total strong.price__current:has-text('$'),.cart-item__total dd.price__current:has-text('$')",
+        "item_quantity": ".w-full [id^='quantity']",
+        "cart_drawer_close_button": "cart-drawer .drawer__close-btn",
+        "cart_page_button": ".cart-drawer__view-cart",
+        "decrease_quantity": ".cart-item__qty [name='minus']",
+        "increase_quantity": ".cart-item__qty [name='plus']",
+        "remove_button": ".cart-item__remove",
+        "item_error": "[id^='line-item-error']",
+        "item_vendor": ".cart-item__details .text-theme-light",
+        "checkout_button": "button[name='checkout']"
+}

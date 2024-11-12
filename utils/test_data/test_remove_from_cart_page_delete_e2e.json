@@ -1,0 +1,8 @@
+{
+    "data": [{
+        "url": "https://www.overstock.com",
+        "query": "bracelet",
+        "items_quantities_add": [4, 3, 4],
+        "remove_indexes": [0, 0, 0]
+    }]
+}

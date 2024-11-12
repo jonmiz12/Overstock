@@ -1,0 +1,7 @@
+{
+        "results_items": "[class^=_productGrid]> ul>li",
+        "item_price": "[class^='_priceWrapper'] div[class^='_price']:nth-child(1)",
+        "item_name": "[class^='_highlighter']",
+        "item_vendor": "[class^='_brand']",
+        "search_title": "#sr-root>[class^='_title']"
+}

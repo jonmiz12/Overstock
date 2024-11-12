@@ -1,0 +1,8 @@
+{
+        "search_box": "[role='textbox']",
+        "search_button": ".header-search-global [type='submit']",
+        "cart_button": "#cart-icon",
+        "cart_num": ".header__cart-count>span:nth-child(1)",
+        "close_dialog_button": "button.close-btn",
+        "close_discount_dialog": "#cl-dialog-close-mcp"
+}
