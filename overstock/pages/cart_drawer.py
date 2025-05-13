@@ -24,8 +24,7 @@ class CartDrawer(Header, CommonCart):
         self.cart_drawer_close_button.click()
 
     def validate_items_in_cart(self, cart: list[dict[str, str | int | float]]):
-        self.validate_cart(cart, self.item_els, self.item_name, self.item_vendor, self.item_quantity, self.item_price,
-                           self.item_total_price)
+        self.validate_cart(cart, self.item_els, self.item_name, self.item_quantity, self.item_price, self.item_total_price)
 
     def click_cart_page_button(self):
         self.cart_page_button.click()

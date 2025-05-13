@@ -3,5 +3,6 @@
         "item_price": "[class^='_priceWrapper'] div[class^='_price']:nth-child(1)",
         "item_name": "[class^='_highlighter']",
         "item_vendor": "[class^='_brand']",
-        "search_title": "#sr-root>[class^='_title']"
+        "search_title": "#sr-root>[class^='_title']",
+        "results_summary": "[class^='_resultsSummary'] b"
 }

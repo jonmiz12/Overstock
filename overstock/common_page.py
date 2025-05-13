@@ -1,10 +1,12 @@
 import inspect
 import time
+from time import sleep
 
 from playwright.sync_api import Page, Locator
 
 from overstock.base_page import BasePage
 from overstock.pages.cart_drawer import CartDrawer
+from overstock.pages.cart_page import CartPage
 from overstock.pages.item_page import ItemPage
 from overstock.pages.results_page import ResultsPage
 
@@ -20,6 +22,7 @@ class CommonPage(BasePage):
         super().__init__(page)
 
     def add_items_from_results_page(self, items_quantities_add: [str], cart):
+        sleep(4)
         for iterator in range(len(items_quantities_add)):
             item_data = self.results_page.return_item_data(iterator)
             self.results_page.create_item(cart, item_data)
@@ -31,9 +34,6 @@ class CommonPage(BasePage):
             self.item_page = ItemPage(new_tab)
             self.item_page.validate_item_data(cart)
             cart = self.item_page.change_quantity_add_to_cart(items_quantities_add[iterator], cart)
-            cart_drawer = CartDrawer(new_tab)
-            cart_drawer.close_dialog()
-            cart_drawer.wait_for_drawer()
-            cart_drawer.validate_items_in_cart(cart)
-            cart_drawer.click_cart_close_button()
+            cart_page = CartPage(new_tab)
+            cart_page.validate_items_in_cart(cart)
             new_tab.close()

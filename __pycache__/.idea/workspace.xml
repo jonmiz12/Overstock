@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="2ee5b83c-a6fd-4c63-aaa8-24b46e758e33" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../overstock/base_page.py" beforeDir="false" afterPath="$PROJECT_DIR$/../overstock/base_page.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../overstock/common_cart.py" beforeDir="false" afterPath="$PROJECT_DIR$/../overstock/common_cart.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../overstock/common_page.py" beforeDir="false" afterPath="$PROJECT_DIR$/../overstock/common_page.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../overstock/locators/cart_page.json" beforeDir="false" afterPath="$PROJECT_DIR$/../overstock/locators/cart_page.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../overstock/locators/results_page.json" beforeDir="false" afterPath="$PROJECT_DIR$/../overstock/locators/results_page.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../overstock/pages/cart_drawer.py" beforeDir="false" afterPath="$PROJECT_DIR$/../overstock/pages/cart_drawer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../overstock/pages/cart_page.py" beforeDir="false" afterPath="$PROJECT_DIR$/../overstock/pages/cart_page.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../overstock/pages/item_page.py" beforeDir="false" afterPath="$PROJECT_DIR$/../overstock/pages/item_page.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../overstock/pages/results_page.py" beforeDir="false" afterPath="$PROJECT_DIR$/../overstock/pages/results_page.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/conftest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/test_add_and_remove_products_e2e.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/test_add_and_remove_products_e2e.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/test_remove_products.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/test_remove_products.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 8
+}]]></component>
+  <component name="ProjectId" id="2x3MRCf8DI0MilUj9mP2hCGXOMO" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "C:/Users/jonmi/PycharmProjects/Overstock/__pycache__"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="2ee5b83c-a6fd-4c63-aaa8-24b46e758e33" name="Changes" comment="" />
+      <created>1747162293189</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1747162293189</updated>
+    </task>
+    <servers />
+  </component>
+</project>

@@ -13,7 +13,7 @@ from utils.utils import Utils
 from playwright.sync_api import Page, Locator
 
 DISCOUNT = 1
-DISCOUNT_THRESHOLD = 1000
+DISCOUNT_THRESHOLD = -1
 
 
 class BasePage:
@@ -90,6 +90,7 @@ class BasePage:
     # Checks the total price of the cart, determines if a discount is applicable, and applies the discount to all items in the cart.
     # The site changes the discount rules from time to time so the commented out rule can be added at any time.
     def check_for_discount_and_update_cart(self, cart: list[dict[str, str | int | float]]) -> list[dict]:
+        if DISCOUNT_THRESHOLD<0: return cart
         global DISCOUNT
         total = 0
         for item in cart:

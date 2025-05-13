@@ -1,5 +1,7 @@
 import inspect
 import time
+from asyncio import wait_for
+from time import sleep
 
 from playwright.sync_api import Page, Locator
 
@@ -124,16 +126,14 @@ class CommonCart(BasePage):
 
     # Validates the items in the cart by comparing the actual quantities, prices, vendors, and total prices on the page
     # against the expected values in the cart dictionary. It logs failed assertions and captures screenshots if validation fails.
-    def validate_cart(self, cart: list[dict[str, str | int | float]], item_els: Locator, item_name: Locator, item_vendor: Locator,
-                      item_quantity: Locator,
+    def validate_cart(self, cart: list[dict[str, str | int | float]], item_els: Locator, full_item_name: Locator, item_quantity: Locator,
                       item_price: Locator, item_total_price: Locator):
+        item_els.wait_for()
         actual_items_count = item_els.count()
-        assert len(
-            cart) == actual_items_count, f"len(cart): {len(cart)}, actual_items_count: {actual_items_count} for cart '{cart}'"
+        assert len(cart) == actual_items_count, f"len(cart): {len(cart)}, actual_items_count: {actual_items_count} for cart '{cart}'"
         for item in item_els.all():
             item_failed_assertions = []
-            actual_item_name = item.locator(item_name).inner_text()
-            actual_vendor = item.locator(item_vendor).inner_text()
+            actual_vendor, actual_item_name = item.locator(full_item_name).inner_text().split(", ", 1)
             actual_item_price = round(float(self.extract_clean_text(item.locator(item_price).inner_text(), "$", True)), 2)
             actual_item_total_price = round(float(self.extract_clean_text(item.locator(item_total_price).inner_text(), "$", True)), 0)
 
@@ -167,16 +167,16 @@ class CommonCart(BasePage):
 
     # Removes an item from the cart by locating its name and clicking the remove button. After removal, validates
     # that the item is successfully removed and updates the cart.
-    def remove_item(self, item: dict[str, str | int | float], cart: list[dict[str, str | int | float]], item_els: Locator, item_name: Locator,
+    def remove_item(self, item: dict[str, str | int | float], cart: list[dict[str, str | int | float]], item_els: Locator, full_item_name: Locator,
                     remove_button: Locator) -> list[dict[str, str | int | float]]:
         self.page.wait_for_load_state()
         for item_el in item_els.all():
-            if item_el.locator(item_name).inner_text() != item["name"]:
+            if item_el.locator(full_item_name).inner_text().split(", ")[1] != item["name"]:
                 continue
             item_el.locator(remove_button).click()
             time.sleep(3)
             break
-        cart = self.validate_item_is_removed(item, cart, item_els, item_name)
+        cart = self.validate_item_is_removed(item, cart, item_els, full_item_name)
         return cart
 
     # Compares item quantities before and after and returns a list of unmatched quantities based on changes.
@@ -210,7 +210,7 @@ class CommonCart(BasePage):
         return item
 
     # Validates whether the specified item has been removed from the cart and updates the cart accordingly.
-    def validate_item_is_removed(self, removed_item: dict[str, str | int | float], cart: list[dict[str, str | int | float]], item_els: Locator, item_name: Locator) -> list[dict]:
+    def validate_item_is_removed(self, removed_item: dict[str, str | int | float], cart: list[dict[str, str | int | float]], item_els: Locator, full_item_name: Locator) -> list[dict]:
         actual_item_count = item_els.count()
         expected_item_count = len(cart) - 1
         if expected_item_count != actual_item_count:
@@ -219,7 +219,7 @@ class CommonCart(BasePage):
                                       inspect.currentframe().f_code.co_name)
         match = False
         for item_el in item_els.all():
-            actual_item_name = item_el.locator(item_name).inner_text()
+            actual_item_name = item_el.locator(full_item_name).inner_text().split(', ')[1]
             if actual_item_name == removed_item["name"]:
                 match = True
                 break
@@ -233,6 +233,6 @@ class CommonCart(BasePage):
     def get_quantity_by_name(expected_name, item_els: Locator, item_quantity: Locator, item_name: Locator) -> int:
         quantity = 0
         for item in item_els.all():
-            if expected_name in item.locator(item_name).inner_text():
+            if expected_name in item.locator(item_name).inner_text().split(", ")[1]:
                 quantity = int(item.locator(item_quantity).get_attribute("value"))
         return quantity

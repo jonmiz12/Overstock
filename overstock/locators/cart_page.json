@@ -1,6 +1,6 @@
 {
        "item_els": "#cart-items tbody>tr",
-       "item_name": ".cart-item__title",
+       "full_item_name": ".cart-item__title",
        "item_price": ".cart-item__info .price__current",
        "item_total_price": ".cart-item__total .price__current",
        "total_items_price": ".cart__summary .justify-between>p",
@@ -9,6 +9,5 @@
        "increase_quantity": ".cart-item__qty [name='plus']",
        "cart_page_title": ".js-cart-title",
        "remove_button": ".cart-item__remove",
-       "item_error": "[id^='line-item-error']",
-       "item_vendor": ".cart-item__details .text-theme-light"
+       "item_error": "[id^='line-item-error']"
 }

@@ -5,6 +5,7 @@ from asyncio import wait_for
 
 from playwright.sync_api import Page
 
+from overstock.common_cart import CommonCart
 from overstock.pages.cart_drawer import CartDrawer
 from overstock.pages.cart_page import CartPage
 from overstock.pages.header import Header
@@ -61,7 +62,7 @@ class ItemPage(Header):
     def validate_item_data(self, cart: list[dict[str, str | int | float]]):
         failed_assertions = []
         actual_name = self.item_name.inner_text()
-        actual_vendor = self.item_vendor.inner_text()
+        actual_vendor = self.item_vendor.inner_text().replace("See more by ", "")
         item = next((item for item in cart if item['name'] == actual_name), None)
         if item:
             self.find_option_price(item["original_price"])
@@ -71,7 +72,7 @@ class ItemPage(Header):
             if cart_original_price != actual_price:
                 failed_assertions.append(f"cart_original_price:{cart_original_price} actual price: {actual_price}")
             if cart_vendor != actual_vendor:
-                failed_assertions.append(f"cart vendor:{cart_vendor} actual vendor: {actual_vendor}")
+                failed_assertions.append(f"cart vendor:{cart_vendor} does not match actual vendor: {actual_vendor}")
         else:
             self.get_screenshot_in_test_report()
             self.add_failed_assertion(f"No match was found for the item name: {item['name']}", inspect.currentframe().f_code.co_name)
@@ -91,49 +92,54 @@ class ItemPage(Header):
     # Changes the item quantity, updates the cart, checks for discounts, and adds the item to the cart.
     def change_quantity_add_to_cart(self, amount: int, cart: list[dict[str, str | int | float]]) -> list[dict[str, str | int | float]]:
         self.change_amount(amount, cart)
+        item_name = self.extract_item_name()
         # self.close_dialog()
         self.click_add_to_cart()
         cart, actual_amount = self.check_for_error(cart, amount)
         if actual_amount == 0:
             return cart
-        self.update_item_quantity(cart, str(actual_amount))
+        cart_page = CartPage(self.page)
+        CartPage.update_item_quantity(cart_page, cart, str(actual_amount), item_name)
         self.check_for_discount_and_update_cart(cart)
         return cart
 
     def check_for_error(self, cart: list[dict[str, str | int | float]], amount: int) -> (list[dict[str, str | int | float]], int):
         actual_amount = amount
-        item_name = self.item_name.inner_text()
+        item_name = None
         match = False
         time.sleep(3)
-        cart_drawer = CartDrawer(self.page)
+        # cart_drawer = CartDrawer(self.page)
+        cart_page = CartPage(self.page)
         if self.item_error.is_visible():
+            item_name = self.item_name.inner_text()
             match = self.item_error.inner_text().__contains__(item_name)
         if match:
             self.get_screenshot_in_test_report()
             self.add_failed_assertion(f"Could not add '{item_name}' to cart due to error - \n {self.item_error.inner_text()}", inspect.currentframe().f_code.co_name)
             self.page.reload()
             self.click_cart()
-            actual_amount = cart_drawer.get_quantity_by_name_cart_drawer(item_name)
+            actual_amount = cart_page.get_quantity_by_name_cart_page(item_name)
+            # actual_amount = cart_drawer.get_quantity_by_name_cart_drawer(item_name)
             if actual_amount == 0:
                 item = next((item for item in cart if item['name'] == item_name), None)
                 cart.remove(item)
-        else:
-            cart_page = CartPage(self.page)
-            self.page.wait_for_load_state()
-            if cart_page.cart_page_title.is_visible():
-                cart_page.page.go_back()
-                self.page.reload()
-                self.click_cart()
+        # else:
+        #     cart_page = CartPage(self.page)
+        #     self.page.wait_for_load_state()
+        #     if cart_page.cart_page_title.is_visible():
+        #         cart_page.page.go_back()
+        #         self.page.reload()
+        #         self.click_cart()
         return cart, actual_amount
 
-    # Updates the item quantity in the cart. If the item is found in the cart, its quantity is updated.
-    # Raises an error if the item is not found in the cart.
-    def update_item_quantity(self, cart: list[dict[str, str | int | float]], amount: str) -> list[dict[str, str | int | float]]:
-        item_name = self.item_name.inner_text()
-        item = next((item for item in cart if item['name'] == item_name), None)
-        if item:
-            item['quantity'] = amount
-            return cart
-        else:
-            self.get_screenshot_in_test_report()
-            self.add_failed_assertion(f"Item '{item_name}' not found in cart", inspect.currentframe().f_code.co_name)
+    # # Updates the item quantity in the cart. If the item is found in the cart, its quantity is updated.
+    # # Raises an error if the item is not found in the cart.
+    # def update_item_quantity(self, cart: list[dict[str, str | int | float]], amount: str) -> list[dict[str, str | int | float]]:
+    #     item_name = self.item_name.inner_text()
+    #     item = next((item for item in cart if item['name'] == item_name), None)
+    #     if item:
+    #         item['quantity'] = amount
+    #         return cart
+    #     else:
+    #         self.get_screenshot_in_test_report()
+    #         self.add_failed_assertion(f"Item '{item_name}' not found in cart", inspect.currentframe().f_code.co_name)

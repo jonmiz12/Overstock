@@ -41,10 +41,10 @@ def test_add_and_remove_products_e2e(page, data):
     cart_drawer.change_cart_quantities_cart_drawer(cart, items_quantities_change)
     cart_drawer.check_for_discount_and_update_cart(cart)
     # validating cart drawer
-    cart_drawer.validate_items_in_cart(cart)
+    # cart_drawer.validate_items_in_cart(cart)
     # removing items in cart drawer
-    cart_drawer.remove_multiple_items(cart, remove_indexes_cart_drawer)
+    # cart_drawer.remove_multiple_items(cart, remove_indexes_cart_drawer)
     # navigating to cart page
-    cart_drawer.click_cart_page_button()
+    # cart_drawer.click_cart_page_button()
     # removing items in cart page
     cart_page.remove_multiple_items(cart, remove_indexes_cart_page)

@@ -103,5 +103,5 @@ def test_remove_from_cart_drawer_delete_e2e(page, data):
     page.reload()
     home_page.click_cart()
     # removing items from cart drawer
-    cart_drawer = CartDrawer(page)
-    cart_drawer.remove_multiple_items(cart, remove_indexes)
+    cart_page = CartPage(page)
+    cart_page.remove_multiple_items(cart, remove_indexes)

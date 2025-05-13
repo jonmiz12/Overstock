@@ -2,6 +2,7 @@ import inspect
 import json
 import string
 import time
+from asyncio import wait_for
 
 from overstock.pages.header import Header
 from playwright.sync_api import Page
@@ -28,6 +29,8 @@ class ResultsPage(Header):
         self.results_items.nth(index).click()
 
     def return_item_data(self, index: int) -> dict[str, str | int | float]:
+        self.close_dialog()
+        self.results_summary.wait_for()
         vendor = self.item_vendor.nth(index).inner_text()
         vendor_clean_text = vendor.replace("by ", "")
 

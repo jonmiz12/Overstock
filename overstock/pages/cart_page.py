@@ -19,8 +19,7 @@ class CartPage(Header, CommonCart):
             setattr(self, key, page.locator(value))
 
     def validate_items_in_cart(self, cart: list[dict[str, str | int | float]]):
-        self.validate_cart(cart, self.item_els, self.item_name, self.item_vendor, self.item_quantity, self.item_price,
-                           self.item_total_price)
+        self.validate_cart(cart, self.item_els, self.full_item_name, self.item_quantity, self.item_price, self.item_total_price)
 
     def validate_total_price(self, cart: list[dict[str, str | int | float]]):
         expected_total_price = 0
@@ -45,10 +44,10 @@ class CartPage(Header, CommonCart):
             self.add_failed_assertion(f"actual title: {actual_title}. expected title: {expected_title}", inspect.currentframe().f_code.co_name)
 
     def remove_item_cart_page(self, item: dict[str, str | int | float], cart: list[dict[str, str | int | float]]):
-        self.remove_item(item, cart, self.item_els, self.item_name, self.remove_button)
+        self.remove_item(item, cart, self.item_els, self.full_item_name, self.remove_button)
 
     def change_cart_quantities_cart_page(self, cart: list[dict[str, str | int | float]], amounts: [int]) -> list[dict[str, str | int | float]]:
-        cart = self.change_cart_quantities(self, cart, amounts, self.item_els, self.item_name, self.increase_quantity,
+        cart = self.change_cart_quantities(self, cart, amounts, self.item_els, self.full_item_name, self.increase_quantity,
                                            self.decrease_quantity, self.item_quantity, self.item_error, self.cart_button)
         return cart
 
@@ -57,3 +56,18 @@ class CartPage(Header, CommonCart):
             self.remove_item_cart_page(cart[remove_indexes[index]], cart)
             self.check_for_discount_and_update_cart(cart)
             self.validate_items_in_cart(cart)
+
+    def get_quantity_by_name_cart_page(self, expected_name) -> int:
+        return self.get_quantity_by_name(expected_name, self.item_els, self.item_quantity, self.full_item_name)
+
+    # Updates the item quantity in the cart. If the item is found in the cart, its quantity is updated.
+    # Raises an error if the item is not found in the cart.
+    def update_item_quantity(self, cart: list[dict[str, str | int | float]], amount: str, item_name: str) -> list[dict[str, str | int | float]]:
+        item = next((item for item in cart if item['name'] == item_name), None)
+        if item:
+            item['quantity'] = amount
+            self.validate_items_in_cart(cart)
+            return cart
+        else:
+            self.get_screenshot_in_test_report()
+            self.add_failed_assertion(f"Item '{item_name}' not found in cart", inspect.currentframe().f_code.co_name)
